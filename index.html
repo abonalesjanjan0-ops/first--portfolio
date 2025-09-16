@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JANJAN ABONALES - Programmer & Data Analyst</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Programmer Background */
+        .programmer-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
+        .code-snippet {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            opacity: 0.4;
+            white-space: pre;
+            animation: codeFloat linear infinite;
+            color: #00ff88;
+        }
+
+        .code-snippet.python { color: #3776ab; }
+        .code-snippet.javascript { color: #f7df1e; }
+        .code-snippet.html { color: #e34f26; }
+        .code-snippet.css { color: #1572b6; }
+        .code-snippet.sql { color: #336791; }
+
+        @keyframes codeFloat {
+            0% { 
+                transform: translateY(100vh) translateX(0px) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.1; }
+            100% { 
+                transform: translateY(-100px) translateX(50px) rotate(5deg); 
+                opacity: 0; 
+            }
+        }
+
+        .terminal-window {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #00ff88;
+            opacity: 0.3;
+            animation: terminalFloat 15s linear infinite;
+            min-width: 200px;
+        }
+
+        .terminal-window::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            color: #ff5555;
+            font-size: 10px;
+        }
+
+        .terminal-content {
+            margin-top: 15px;
+        }
+
+        @keyframes terminalFloat {
+            0% { 
+                transform: translateY(100vh) translateX(0px) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.1; }
+            100% { 
+                transform: translateY(-100px) translateX(30px) rotate(2deg); 
+                opacity: 0; 
+            }
+        }
+
+        .code-editor {
+            position: absolute;
+            background: rgba(30, 30, 30, 0.9);
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            opacity: 0.2;
+            animation: editorFloat 20s linear infinite;
+            min-width: 250px;
+        }
+
+        .editor-header {
+            background: #2d2d2d;
+            margin: -10px -10px 8px -10px;
+            padding: 5px 10px;
+            border-radius: 6px 6px 0 0;
+            color: #ccc;
+            font-size: 9px;
+        }
+
+        .line-numbers {
+            color: #666;
+            margin-right: 10px;
+            user-select: none;
+        }
+
+        @keyframes editorFloat {
+            0% { 
+                transform: translateY(100vh) translateX(0px) scale(0.8); 
+                opacity: 0; 
+            }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.05; }
+            100% { 
+                transform: translateY(-100px) translateX(-30px) scale(0.9); 
+                opacity: 0; 
+            }
+        }
+
+        .floating-brackets {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0.1;
+            animation: bracketFloat 12s linear infinite;
+        }
+
+        .floating-brackets.curly { color: #ff6b6b; }
+        .floating-brackets.square { color: #4ecdc4; }
+        .floating-brackets.round { color: #45b7d1; }
+
+        @keyframes bracketFloat {
+            0% { 
+                transform: translateY(100vh) rotate(0deg); 
+                opacity: 0; 
+            }
+            20% { opacity: 0.1; }
+            80% { opacity: 0.05; }
+            100% { 
+                transform: translateY(-100px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        /* Page Loader */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #1a1a2e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: all 1s ease;
+        }
+
+        .page-loader.loaded {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.1);
+        }
+
+        .loader-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .loader-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 50px;
+            animation: logoGlow 2s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .loader-logo::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+            background-size: 400% 400%;
+            border-radius: 10px;
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.3;
+            animation: gradientShift 4s ease-in-out infinite;
+        }
+
+        .main-loader {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 40px;
+        }
+
+        .loader-ring {
+            position: absolute;
+            border: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        .loader-ring:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            border-top: 3px solid #00ffff;
+            border-right: 3px solid #00ffff;
+            animation-duration: 2s;
+        }
+
+        .loader-ring:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            top: 10px;
+            left: 10px;
+            border-bottom: 3px solid #ff00ff;
+            border-left: 3px solid #ff00ff;
+            animation-duration: 1.5s;
+            animation-direction: reverse;
+        }
+
+        .loader-ring:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 20px;
+            left: 20px;
+            border-top: 3px solid #ffff00;
+            border-right: 3px solid #ffff00;
+            animation-duration: 1s;
+        }
+
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #00ffff, #ff00ff);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                box-shadow: 0 0 40px rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        .progress-container {
+            width: 400px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+            background-size: 400% 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: progressGlow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .loading-status {
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            text-align: center;
+            opacity: 0.9;
+            animation: textFade 2s ease-in-out infinite;
+            min-height: 30px;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .loader-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .loader-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: floatParticle 4s infinite ease-in-out;
+        }
+
+        .loader-particle:nth-child(even) {
+            background: #ff00ff;
+            animation-duration: 3s;
+        }
+
+        .loader-particle:nth-child(3n) {
+            background: #ffff00;
+            animation-duration: 5s;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #1a1a2e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .loading-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            animation: logoGlow 2s ease-in-out infinite, gradientShift 3s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px #00ffff);
+            }
+            50% { 
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 40px #ff00ff);
+            }
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 3px solid rgba(0, 255, 255, 0.1);
+            border-top: 3px solid #00ffff;
+            border-right: 3px solid #ff00ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .loading-spinner::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            border: 2px solid transparent;
+            border-top: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: spin 2s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-bar-container {
+            width: 350px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% 100%;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: progressGlow 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .loading-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes progressGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            }
+            50% { 
+                background-position: 100% 50%;
+                box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .loading-percentage {
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .loading-text {
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            text-align: center;
+            opacity: 0.8;
+            animation: textFade 2s ease-in-out infinite;
+        }
+
+        @keyframes textFade {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .loading-dots {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .loading-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .loading-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: floatParticle 3s infinite ease-in-out;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Music Control */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .music-control:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .music-button {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .music-button:hover {
+            transform: rotate(360deg);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .music-icon {
+            font-size: 18px;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .music-button.playing .music-icon {
+            animation: musicPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .music-waves {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .music-button.playing .music-waves {
+            opacity: 1;
+        }
+
+        .wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: waveExpand 2s ease-out infinite;
+        }
+
+        .wave:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .wave:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes waveExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .music-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .track-name {
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .track-status {
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .music-control.playing .track-status {
+            animation: statusBlink 2s ease-in-out infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Profile Picture */
+        .profile-picture {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out both;
+        }
+
+        .profile-image {
+            position: relative;
+            z-index: 3;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            padding: 3px;
+            animation: profileGlow 3s ease-in-out infinite;
+        }
+
+        .profile-image svg {
+            display: block;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-image:hover svg {
+            transform: scale(1.05);
+        }
+
+        .profile-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rotateRing 10s linear infinite;
+            z-index: 1;
+        }
+
+        .profile-ring-2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            border-radius: 50%;
+            animation: rotateRing 15s linear infinite reverse;
+            z-index: 1;
+        }
+
+        @keyframes profileGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+                filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.3));
+            }
+            33% {
+                box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+                filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.4));
+            }
+            66% {
+                box-shadow: 0 0 25px rgba(255, 255, 0, 0.5);
+                filter: drop-shadow(0 0 12px rgba(255, 255, 0, 0.3));
+            }
+        }
+
+        @keyframes rotateRing {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #cccccc;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .hero .description {
+            font-size: 1.2rem;
+            color: #aaaaaa;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 1.5s both;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            color: #000000;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #00ffff;
+            border: 2px solid #00ffff;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Sections */
+        .section {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+            border-color: #00ffff;
+        }
+
+        .skill-card h3 {
+            font-family: 'Orbitron', monospace;
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .skill-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            border-radius: 4px;
+            transition: width 2s ease;
+            width: 0;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+        }
+
+        .project-header {
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+        }
+
+        .project-card h3 {
+            font-family: 'Orbitron', monospace;
+            color: #00ffff;
+            margin-bottom: 10px;
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tech-tag {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        /* Contact Section */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffff;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Terminal Effect */
+        .terminal {
+            background: #000000;
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #ff5555;
+            font-size: 12px;
+        }
+
+        .terminal-content {
+            margin-top: 25px;
+        }
+
+        .terminal-line {
+            margin: 5px 0;
+            animation: typewriter 2s steps(40) 1s both;
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #00ffff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .section { padding: 50px 20px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-particles" id="loaderParticles"></div>
+        <div class="loader-wrapper">
+            <div class="loader-logo">JANJAN.DEV</div>
+            <div class="main-loader">
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+                <div class="loader-center"></div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-text" id="progressText">0%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="loading-status" id="loadingStatus">
+                Initializing Application<span class="loading-dots"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-particles" id="loadingParticles"></div>
+        <div class="loader-container">
+            <div class="loading-logo">JANJAN.DEV</div>
+            <div class="loading-spinner"></div>
+            <div class="loading-bar-container">
+                <div class="loading-percentage" id="loadingPercentage">0%</div>
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loadingProgress"></div>
+                </div>
+            </div>
+            <div class="loading-text">
+                Initializing System<span class="loading-dots"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Programmer Background -->
+    <div class="programmer-bg" id="programmerBg"></div>
+
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <div class="music-button" id="musicButton">
+            <div class="music-icon">♪</div>
+            <div class="music-waves">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+        </div>
+        <div class="music-info">
+            <div class="track-name">Coding Ambience</div>
+            <div class="track-status">Click to play</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">JANJAN.DEV</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="profile-picture">
+                <div class="profile-image">
+                    <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background circle -->
+                        <defs>
+                            <linearGradient id="profileGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#ff00ff;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#ffff00;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="faceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fdbcb4;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f4a688;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Outer glow ring -->
+                        <circle cx="75" cy="75" r="73" fill="none" stroke="url(#profileGradient)" stroke-width="2" opacity="0.6"/>
+                        
+                        <!-- Main background -->
+                        <circle cx="75" cy="75" r="70" fill="#1a1a2e"/>
+                        
+                        <!-- Face -->
+                        <ellipse cx="75" cy="65" rx="25" ry="28" fill="url(#faceGradient)"/>
+                        
+                        <!-- Hair -->
+                        <path d="M50 45 Q75 25 100 45 Q95 35 75 30 Q55 35 50 45" fill="#2c1810"/>
+                        
+                        <!-- Eyes -->
+                        <ellipse cx="68" cy="60" rx="3" ry="4" fill="#000"/>
+                        <ellipse cx="82" cy="60" rx="3" ry="4" fill="#000"/>
+                        <ellipse cx="68.5" cy="59" rx="1" ry="1.5" fill="#fff"/>
+                        <ellipse cx="82.5" cy="59" rx="1" ry="1.5" fill="#fff"/>
+                        
+                        <!-- Nose -->
+                        <ellipse cx="75" cy="68" rx="1.5" ry="2" fill="#e09b83"/>
+                        
+                        <!-- Mouth -->
+                        <path d="M70 75 Q75 78 80 75" stroke="#d4756b" stroke-width="1.5" fill="none"/>
+                        
+                        <!-- Shirt/Collar -->
+                        <path d="M45 120 Q75 110 105 120 L105 150 L45 150 Z" fill="#2c3e50"/>
+                        <path d="M65 115 Q75 112 85 115 L85 150 L65 150 Z" fill="#34495e"/>
+                        
+                        <!-- Coding symbols floating around -->
+                        <text x="25" y="35" font-family="monospace" font-size="12" fill="#00ffff" opacity="0.7">&lt;/&gt;</text>
+                        <text x="110" y="40" font-family="monospace" font-size="10" fill="#ff00ff" opacity="0.7">{}</text>
+                        <text x="20" y="100" font-family="monospace" font-size="8" fill="#ffff00" opacity="0.7">[]</text>
+                        <text x="115" y="110" font-family="monospace" font-size="10" fill="#00ffff" opacity="0.7">( )</text>
+                        
+                        <!-- Animated data points -->
+                        <circle cx="30" cy="70" r="2" fill="#00ffff" opacity="0.8">
+                            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="120" cy="80" r="1.5" fill="#ff00ff" opacity="0.8">
+                            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="25" cy="120" r="1" fill="#ffff00" opacity="0.8">
+                            <animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
+                <div class="profile-ring"></div>
+                <div class="profile-ring-2"></div>
+            </div>
+            <h1>JANJAN ABONALES</h1>
+            <p class="subtitle">Programmer & Data Analyst</p>
+            <p class="description">Transforming data into insights and code into solutions for the future</p>
+            <div class="cta-buttons">
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section fade-in">
+        <h2>About Me</h2>
+        <div class="terminal">
+            <div class="terminal-content">
+                <div class="terminal-line">$ whoami</div>
+                <div class="terminal-line">janjan_abonales: Full-stack developer & data scientist</div>
+                <div class="terminal-line">$ cat experience.txt</div>
+                <div class="terminal-line">5+ years building scalable applications</div>
+                <div class="terminal-line">Expert in machine learning & predictive analytics</div>
+                <div class="terminal-line">Passionate about clean code & data-driven solutions</div>
+                <div class="terminal-line">$ █<span class="cursor"></span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section fade-in">
+        <h2>Technical Arsenal</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>Programming Languages</h3>
+                <div class="skill-item">
+                    <span>Python</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="95%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>JavaScript/TypeScript</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="90%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>Java</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="85%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>SQL</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="92%"></div></div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <h3>Data Science & ML</h3>
+                <div class="skill-item">
+                    <span>Machine Learning</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="88%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>Deep Learning</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="82%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>Data Visualization</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="90%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>Statistical Analysis</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="87%"></div></div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <h3>Frameworks & Tools</h3>
+                <div class="skill-item">
+                    <span>React/Next.js</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="88%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>TensorFlow/PyTorch</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="85%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>Docker/Kubernetes</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="80%"></div></div>
+                </div>
+                <div class="skill-item">
+                    <span>AWS/GCP</span>
+                    <div class="skill-bar"><div class="skill-progress" data-width="83%"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section fade-in">
+        <h2>Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-header">
+                    <h3>AI-Powered Analytics Dashboard</h3>
+                    <p>Real-time business intelligence platform with predictive analytics</p>
+                </div>
+                <div class="project-content">
+                    <p>Built a comprehensive dashboard that processes millions of data points to provide actionable insights using machine learning algorithms.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-header">
+                    <h3>Distributed Computing Framework</h3>
+                    <p>Scalable microservices architecture for high-performance computing</p>
+                </div>
+                <div class="project-content">
+                    <p>Designed and implemented a distributed system that handles 10M+ requests per day with 99.9% uptime and auto-scaling capabilities.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Java</span>
+                        <span class="tech-tag">Kubernetes</span>
+                        <span class="tech-tag">Redis</span>
+                        <span class="tech-tag">Apache Kafka</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-header">
+                    <h3>Neural Network Optimizer</h3>
+                    <p>Advanced deep learning model optimization toolkit</p>
+                </div>
+                <div class="project-content">
+                    <p>Created an automated hyperparameter tuning system that reduces model training time by 60% while improving accuracy by 15%.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">PyTorch</span>
+                        <span class="tech-tag">CUDA</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">MLflow</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section fade-in">
+        <h2>Initialize Connection</h2>
+        <div class="contact-form">
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="project">Project Type</label>
+                    <select id="project" name="project" style="width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 8px; color: #ffffff; font-family: 'Rajdhani', sans-serif;">
+                        <option value="web-development">Web Development</option>
+                        <option value="data-analysis">Data Analysis</option>
+                        <option value="machine-learning">Machine Learning</option>
+                        <option value="consulting">Technical Consulting</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // Create programmer background
+        function createProgrammerBackground() {
+            const programmerBg = document.getElementById('programmerBg');
+            
+            // Code snippets in different languages
+            const codeSnippets = [
+                {
+                    lang: 'python',
+                    code: `def analyze_data(dataset):
+    results = []
+    for item in dataset:
+        if item.value > threshold:
+            results.append(process(item))
+    return results`
+                },
+                {
+                    lang: 'javascript',
+                    code: `const fetchData = async () => {
+    try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        return data.filter(item => item.active);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};`
+                },
+                {
+                    lang: 'html',
+                    code: `<div class="container">
+    <header class="main-header">
+        <h1>Data Dashboard</h1>
+        <nav class="navigation">
+            <a href="#analytics">Analytics</a>
+        </nav>
+    </header>
+</div>`
+                },
+                {
+                    lang: 'css',
+                    code: `.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px;
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}`
+                },
+                {
+                    lang: 'sql',
+                    code: `SELECT u.name, COUNT(p.id) as project_count
+FROM users u
+LEFT JOIN projects p ON u.id = p.user_id
+WHERE u.active = true
+GROUP BY u.id, u.name
+ORDER BY project_count DESC;`
+                }
+            ];
+
+            // Terminal commands
+            const terminalCommands = [
+                `$ git commit -m "Add new feature"
+[main 7f8a9b2] Add new feature
+3 files changed, 47 insertions(+)`,
+                `$ npm install express
++ express@4.18.2
+added 57 packages in 3.2s`,
+                `$ python train_model.py
+Epoch 1/100 - Loss: 0.4521
+Epoch 2/100 - Loss: 0.3847
+Training completed successfully`,
+                `$ docker build -t myapp .
+Step 1/8 : FROM node:16-alpine
+Successfully built 8f2a1b3c4d5e`,
+                `$ kubectl get pods
+NAME                    READY   STATUS
+api-deployment-xyz      1/1     Running
+database-pod-abc        1/1     Running`
+            ];
+
+            // Code editor content
+            const editorContent = [
+                {
+                    filename: 'main.py',
+                    code: `1  import pandas as pd
+2  import numpy as np
+3  
+4  def process_data(df):
+5      cleaned = df.dropna()
+6      return cleaned.groupby('category').sum()`
+                },
+                {
+                    filename: 'app.js',
+                    code: `1  const express = require('express');
+2  const app = express();
+3  
+4  app.get('/api/users', (req, res) => {
+5      res.json({ users: userData });
+6  });`
+                },
+                {
+                    filename: 'styles.css',
+                    code: `1  .header {
+2      background: #2c3e50;
+3      color: white;
+4      padding: 1rem;
+5  }`
+                }
+            ];
+
+            // Create floating code snippets
+            function createCodeSnippet() {
+                const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                const element = document.createElement('div');
+                element.className = `code-snippet ${snippet.lang}`;
+                element.style.left = Math.random() * (window.innerWidth - 300) + 'px';
+                element.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                element.style.animationDelay = Math.random() * 5 + 's';
+                element.textContent = snippet.code;
+                programmerBg.appendChild(element);
+
+                // Remove element after animation
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, 20000);
+            }
+
+            // Create floating terminal windows
+            function createTerminalWindow() {
+                const command = terminalCommands[Math.floor(Math.random() * terminalCommands.length)];
+                const element = document.createElement('div');
+                element.className = 'terminal-window';
+                element.style.left = Math.random() * (window.innerWidth - 250) + 'px';
+                element.style.animationDuration = (Math.random() * 5 + 15) + 's';
+                element.style.animationDelay = Math.random() * 3 + 's';
+                
+                const content = document.createElement('div');
+                content.className = 'terminal-content';
+                content.textContent = command;
+                element.appendChild(content);
+                
+                programmerBg.appendChild(element);
+
+                // Remove element after animation
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, 20000);
+            }
+
+            // Create floating code editors
+            function createCodeEditor() {
+                const editor = editorContent[Math.floor(Math.random() * editorContent.length)];
+                const element = document.createElement('div');
+                element.className = 'code-editor';
+                element.style.left = Math.random() * (window.innerWidth - 300) + 'px';
+                element.style.animationDuration = (Math.random() * 8 + 20) + 's';
+                element.style.animationDelay = Math.random() * 4 + 's';
+                
+                const header = document.createElement('div');
+                header.className = 'editor-header';
+                header.textContent = editor.filename;
+                
+                const content = document.createElement('div');
+                content.innerHTML = editor.code;
+                
+                element.appendChild(header);
+                element.appendChild(content);
+                programmerBg.appendChild(element);
+
+                // Remove element after animation
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, 28000);
+            }
+
+            // Create floating brackets
+            function createFloatingBrackets() {
+                const brackets = [
+                    { char: '{', class: 'curly' },
+                    { char: '}', class: 'curly' },
+                    { char: '[', class: 'square' },
+                    { char: ']', class: 'square' },
+                    { char: '(', class: 'round' },
+                    { char: ')', class: 'round' }
+                ];
+                
+                const bracket = brackets[Math.floor(Math.random() * brackets.length)];
+                const element = document.createElement('div');
+                element.className = `floating-brackets ${bracket.class}`;
+                element.style.left = Math.random() * window.innerWidth + 'px';
+                element.style.animationDuration = (Math.random() * 4 + 12) + 's';
+                element.style.animationDelay = Math.random() * 2 + 's';
+                element.textContent = bracket.char;
+                programmerBg.appendChild(element);
+
+                // Remove element after animation
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, 16000);
+            }
+
+            // Start creating elements at intervals
+            setInterval(createCodeSnippet, 3000);
+            setInterval(createTerminalWindow, 5000);
+            setInterval(createCodeEditor, 7000);
+            setInterval(createFloatingBrackets, 2000);
+
+            // Create initial elements
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createCodeSnippet, i * 1000);
+                setTimeout(createFloatingBrackets, i * 500);
+            }
+        }
+
+        // Create loading particles
+        function createLoadingParticles() {
+            const particlesContainer = document.getElementById('loadingParticles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'loading-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Advanced loading screen functionality
+        function startLoadingSequence() {
+            const loadingProgress = document.getElementById('loadingProgress');
+            const loadingPercentage = document.getElementById('loadingPercentage');
+            const loadingText = document.querySelector('.loading-text');
+            
+            const loadingSteps = [
+                { percent: 15, text: 'Loading Assets', duration: 300 },
+                { percent: 35, text: 'Initializing Components', duration: 400 },
+                { percent: 55, text: 'Connecting to Server', duration: 350 },
+                { percent: 75, text: 'Loading Binary Matrix', duration: 400 },
+                { percent: 90, text: 'Finalizing Setup', duration: 300 },
+                { percent: 100, text: 'Ready to Launch', duration: 200 }
+            ];
+
+            let currentStep = 0;
+            let currentPercent = 0;
+
+            function updateProgress() {
+                if (currentStep < loadingSteps.length) {
+                    const step = loadingSteps[currentStep];
+                    const targetPercent = step.percent;
+                    
+                    // Update text
+                    loadingText.innerHTML = step.text + '<span class="loading-dots"></span>';
+                    
+                    // Animate progress bar
+                    const progressInterval = setInterval(() => {
+                        if (currentPercent < targetPercent) {
+                            currentPercent += 1;
+                            loadingProgress.style.width = currentPercent + '%';
+                            loadingPercentage.textContent = currentPercent + '%';
+                        } else {
+                            clearInterval(progressInterval);
+                            currentStep++;
+                            setTimeout(updateProgress, step.duration);
+                        }
+                    }, 20);
+                } else {
+                    // Loading complete
+                    setTimeout(hideLoadingScreen, 500);
+                }
+            }
+
+            updateProgress();
+        }
+
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.add('hidden');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 800);
+        }
+
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Animate skill bars
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const rect = bar.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const width = bar.getAttribute('data-width');
+                    bar.style.width = width;
+                }
+            });
+        }
+
+        // Contact form handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const project = formData.get('project');
+            const message = formData.get('message');
+            
+            // Simulate form submission
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            
+            button.textContent = 'Sending...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert(`Thank you, ${name}! Your message about ${project} has been received. I'll get back to you at ${email} soon!`);
+                this.reset();
+                button.textContent = originalText;
+                button.disabled = false;
+            }, 2000);
+        });
+
+        // Page Loader functionality
+        function createLoaderParticles() {
+            const particlesContainer = document.getElementById('loaderParticles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'loader-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function startPageLoader() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const loadingStatus = document.getElementById('loadingStatus');
+            
+            const loadingSteps = [
+                { percent: 20, text: 'Loading Core Modules', duration: 400 },
+                { percent: 40, text: 'Initializing Components', duration: 500 },
+                { percent: 60, text: 'Setting Up Environment', duration: 450 },
+                { percent: 80, text: 'Loading Resources', duration: 400 },
+                { percent: 95, text: 'Finalizing Setup', duration: 300 },
+                { percent: 100, text: 'Ready to Launch', duration: 200 }
+            ];
+
+            let currentStep = 0;
+            let currentPercent = 0;
+
+            function updateProgress() {
+                if (currentStep < loadingSteps.length) {
+                    const step = loadingSteps[currentStep];
+                    const targetPercent = step.percent;
+                    
+                    // Update status text
+                    loadingStatus.innerHTML = step.text + '<span class="loading-dots"></span>';
+                    
+                    // Animate progress bar
+                    const progressInterval = setInterval(() => {
+                        if (currentPercent < targetPercent) {
+                            currentPercent += 1;
+                            progressFill.style.width = currentPercent + '%';
+                            progressText.textContent = currentPercent + '%';
+                        } else {
+                            clearInterval(progressInterval);
+                            currentStep++;
+                            setTimeout(updateProgress, step.duration);
+                        }
+                    }, 25);
+                } else {
+                    // Page loading complete
+                    setTimeout(hidePageLoader, 500);
+                }
+            }
+
+            updateProgress();
+        }
+
+        function hidePageLoader() {
+            const pageLoader = document.getElementById('pageLoader');
+            pageLoader.classList.add('loaded');
+            
+            // Start the secondary loading sequence after page loader
+            setTimeout(() => {
+                createLoadingParticles();
+                startLoadingSequence();
+            }, 500);
+        }
+
+        // Music functionality
+        class CodingMusicPlayer {
+            constructor() {
+                this.isPlaying = false;
+                this.audioContext = null;
+                this.oscillators = [];
+                this.gainNode = null;
+                this.currentTrack = 0;
+                this.tracks = [
+                    { name: 'Coding Ambience', tempo: 120 },
+                    { name: 'Digital Dreams', tempo: 100 },
+                    { name: 'Binary Beats', tempo: 140 },
+                    { name: 'Algorithm Flow', tempo: 110 }
+                ];
+                this.init();
+            }
+
+            init() {
+                const musicControl = document.getElementById('musicControl');
+                const musicButton = document.getElementById('musicButton');
+                const trackStatus = document.querySelector('.track-status');
+
+                musicControl.addEventListener('click', () => {
+                    if (this.isPlaying) {
+                        this.stop();
+                    } else {
+                        this.play();
+                    }
+                });
+
+                // Change track on right click
+                musicControl.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    this.nextTrack();
+                });
+            }
+
+            async createAudioContext() {
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.gainNode = this.audioContext.createGain();
+                    this.gainNode.connect(this.audioContext.destination);
+                    this.gainNode.gain.value = 0.1; // Low volume for ambient music
+                }
+
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+            }
+
+            createAmbientTone(frequency, type = 'sine') {
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.type = type;
+                oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.02, this.audioContext.currentTime + 2);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.gainNode);
+                
+                return { oscillator, gainNode };
+            }
+
+            async play() {
+                try {
+                    await this.createAudioContext();
+                    
+                    const track = this.tracks[this.currentTrack];
+                    const baseFreq = 220; // A3
+                    
+                    // Create ambient drone layers
+                    const drone1 = this.createAmbientTone(baseFreq, 'sine');
+                    const drone2 = this.createAmbientTone(baseFreq * 1.5, 'triangle');
+                    const drone3 = this.createAmbientTone(baseFreq * 0.75, 'sawtooth');
+                    
+                    this.oscillators = [drone1, drone2, drone3];
+                    
+                    // Start all oscillators
+                    this.oscillators.forEach(({ oscillator }) => {
+                        oscillator.start();
+                    });
+                    
+                    // Add subtle frequency modulation
+                    this.startFrequencyModulation();
+                    
+                    this.isPlaying = true;
+                    this.updateUI();
+                    
+                } catch (error) {
+                    console.log('Audio not supported, showing visual feedback only');
+                    this.isPlaying = true;
+                    this.updateUI();
+                }
+            }
+
+            startFrequencyModulation() {
+                const modulate = () => {
+                    if (!this.isPlaying) return;
+                    
+                    this.oscillators.forEach(({ oscillator }, index) => {
+                        const time = this.audioContext.currentTime;
+                        const variation = Math.sin(time * 0.1 + index) * 2;
+                        const baseFreq = 220 * (index === 0 ? 1 : index === 1 ? 1.5 : 0.75);
+                        oscillator.frequency.setValueAtTime(baseFreq + variation, time);
+                    });
+                    
+                    setTimeout(modulate, 100);
+                };
+                modulate();
+            }
+
+            stop() {
+                if (this.oscillators.length > 0) {
+                    this.oscillators.forEach(({ oscillator, gainNode }) => {
+                        gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 1);
+                        oscillator.stop(this.audioContext.currentTime + 1);
+                    });
+                    this.oscillators = [];
+                }
+                
+                this.isPlaying = false;
+                this.updateUI();
+            }
+
+            nextTrack() {
+                const wasPlaying = this.isPlaying;
+                if (this.isPlaying) {
+                    this.stop();
+                }
+                
+                this.currentTrack = (this.currentTrack + 1) % this.tracks.length;
+                this.updateTrackInfo();
+                
+                if (wasPlaying) {
+                    setTimeout(() => this.play(), 500);
+                }
+            }
+
+            updateUI() {
+                const musicButton = document.getElementById('musicButton');
+                const musicControl = document.getElementById('musicControl');
+                const trackStatus = document.querySelector('.track-status');
+                
+                if (this.isPlaying) {
+                    musicButton.classList.add('playing');
+                    musicControl.classList.add('playing');
+                    trackStatus.textContent = 'Now playing...';
+                } else {
+                    musicButton.classList.remove('playing');
+                    musicControl.classList.remove('playing');
+                    trackStatus.textContent = 'Click to play';
+                }
+            }
+
+            updateTrackInfo() {
+                const trackName = document.querySelector('.track-name');
+                const track = this.tracks[this.currentTrack];
+                trackName.textContent = track.name;
+            }
+        }
+
+        // Initialize music player
+        let musicPlayer;
+
+        // Initialize everything
+        window.addEventListener('DOMContentLoaded', () => {
+            createLoaderParticles();
+            startPageLoader();
+            musicPlayer = new CodingMusicPlayer();
+        });
+
+        window.addEventListener('load', () => {
+            createProgrammerBackground();
+            createParticles();
+            handleScrollAnimations();
+            animateSkillBars();
+        });
+
+        window.addEventListener('scroll', () => {
+            handleScrollAnimations();
+            animateSkillBars();
+        });
+
+        // Add typing effect to terminal
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Enhanced navigation background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(0, 0, 0, 0.95)';
+            } else {
+                nav.style.background = 'rgba(0, 0, 0, 0.8)';
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fe6b508465bc45',t:'MTc1ODAwNTMxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
